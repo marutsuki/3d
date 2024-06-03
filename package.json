@@ -4,11 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "tsup",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "marutsuki",
   "license": "ISC",
   "devDependencies": {
+    "tsup": "^8.1.0",
     "typescript": "^5.4.5"
   }
 }
