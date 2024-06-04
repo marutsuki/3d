@@ -1,5 +1,6 @@
-export const FRAGMENT_SHADER = `
-#version 330 core
+export const FRAGMENT_SHADER = `#version 300 es
+
+precision highp float;
 
 // Interpolated color from the vertex shader
 in vec3 fragColor;

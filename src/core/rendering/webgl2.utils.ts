@@ -49,5 +49,5 @@ export function createShader(
   if (!success) {
     throw new Error("Could not compile shader: " + gl.getShaderInfoLog(shader));
   }
-  return shaderSrc;
+  return shader;
 }
