@@ -1,3 +1,4 @@
+import { meshCube } from "../../object/basic/Cube";
 import Renderer from "../rendering/Renderer";
 
 export default class World {
@@ -6,6 +7,18 @@ export default class World {
   public constructor(gl: WebGL2RenderingContext) {
     this.renderer = new Renderer(gl);
     this.renderer.init();
+    this.renderer.add(
+      meshCube({
+        center: {
+          x: 5,
+          y: 5,
+          z: 5,
+        },
+        width: 2,
+        height: 2,
+        depth: 2,
+      })
+    );
   }
 
   public start() {
