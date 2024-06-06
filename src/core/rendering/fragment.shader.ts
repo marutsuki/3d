@@ -9,5 +9,5 @@ out vec4 outColor;
 void main()
 {
     // Set the fragment color
-    outColor = vec4(1, 1, 1, 1.0);
+    outColor = vec4(fragColor.x, fragColor.y, fragColor.z, 1);
 }`;

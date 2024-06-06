@@ -1,6 +1,7 @@
-import { Vec3 } from "../math/types";
+import { Colour, Vec3 } from "../math/types";
 
 export type Mesh = {
   indices: number[];
-  vertices: Vec3[];
+  vertices: number[];
+  colours: number[];
 };

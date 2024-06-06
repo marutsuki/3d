@@ -13,11 +13,12 @@ export default class Renderer {
 
   public constructor(private gl: WebGL2RenderingContext) {
     this.program = createProgram(gl, VERTEX_SHADER, FRAGMENT_SHADER);
-    this.batcher = new Batcher(gl);
+    this.batcher = new Batcher(gl, this.program);
   }
 
   public init() {
     this.gl.useProgram(this.program);
+    this.gl.enable(this.gl.DEPTH_TEST);
   }
 
   public add(mesh: Mesh) {
@@ -29,13 +30,13 @@ export default class Renderer {
     const view = mat4.create();
     const projection = mat4.create();
 
-    mat4.lookAt(view, [0, 0, 0], [5, 5, 5], [0, 1, 0]);
+    mat4.lookAt(view, [-1, 1, -3], [5, 5, 5], [0, 1, 0]);
     mat4.perspective(
       projection,
-      Math.PI / 1.5,
+      Math.PI / 4,
       this.gl.canvas.width / this.gl.canvas.height,
       0.1,
-      200
+      200000
     );
 
     const mvp: ModelViewProjection = {

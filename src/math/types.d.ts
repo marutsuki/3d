@@ -3,3 +3,10 @@ export type Vec3 = {
   y: number;
   z: number;
 };
+
+export type Colour = {
+  r: number;
+  g: number;
+  b: number;
+  a: number;
+};
