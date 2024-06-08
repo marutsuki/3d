@@ -53,9 +53,9 @@ export function meshCube(cube: Cuboid): Mesh {
   const vertices = [];
   for (const v of PRISM_VERTICES) {
     vertices.push(
-      v[0] * cube.width + cube.center.x,
-      v[1] * cube.height + cube.center.y,
-      v[2] * cube.depth + cube.center.z
+      (v[0] - 0.5) * cube.width + cube.center.x,
+      (v[1] - 0.5) * cube.height + cube.center.y,
+      (v[2] - 0.5) * cube.depth + cube.center.z
     );
   }
   return {

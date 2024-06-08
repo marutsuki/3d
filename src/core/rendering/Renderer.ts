@@ -1,19 +1,39 @@
 import { mat4 } from "gl-matrix";
 import { Mesh } from "../../mesh/types";
 import Batcher from "../batching/Batcher";
-import { ModelViewProjection } from "./MVP";
 import { FRAGMENT_SHADER } from "./fragment.shader";
 import { VERTEX_SHADER } from "./vertex.shader";
 import { createProgram } from "./webgl2.utils";
+
+type ModelViewProjection = {
+  model: mat4;
+  view: mat4;
+  projection: mat4;
+};
+
+export type ModelViewProjectionProvider = {
+  isDirty: () => boolean;
+  provider: () => ModelViewProjection;
+};
 
 export default class Renderer {
   private program: WebGLProgram;
 
   private batcher: Batcher;
 
-  public constructor(private gl: WebGL2RenderingContext) {
+  private uniforms: Record<string, WebGLUniformLocation | null>;
+
+  public constructor(
+    private gl: WebGL2RenderingContext,
+    private mvpProvider: ModelViewProjectionProvider | null = null
+  ) {
     this.program = createProgram(gl, VERTEX_SHADER, FRAGMENT_SHADER);
     this.batcher = new Batcher(gl, this.program);
+    this.uniforms = {
+      model: this.gl.getUniformLocation(this.program, "model"),
+      view: this.gl.getUniformLocation(this.program, "view"),
+      projection: this.gl.getUniformLocation(this.program, "projection"),
+    };
   }
 
   public init() {
@@ -26,39 +46,13 @@ export default class Renderer {
   }
 
   public draw() {
-    const model = mat4.create();
-    const view = mat4.create();
-    const projection = mat4.create();
+    if (this.mvpProvider?.isDirty()) {
+      const mvp = this.mvpProvider.provider();
+      this.gl.uniformMatrix4fv(this.uniforms.model, false, mvp.model);
+      this.gl.uniformMatrix4fv(this.uniforms.view, false, mvp.view);
+      this.gl.uniformMatrix4fv(this.uniforms.projection, false, mvp.projection);
+    }
 
-    mat4.lookAt(view, [-1, 1, -3], [5, 5, 5], [0, 1, 0]);
-    mat4.perspective(
-      projection,
-      Math.PI / 4,
-      this.gl.canvas.width / this.gl.canvas.height,
-      0.1,
-      200000
-    );
-
-    const mvp: ModelViewProjection = {
-      model,
-      view,
-      projection,
-    };
-    this.gl.uniformMatrix4fv(
-      this.gl.getUniformLocation(this.program, "model"),
-      false,
-      model
-    );
-    this.gl.uniformMatrix4fv(
-      this.gl.getUniformLocation(this.program, "view"),
-      false,
-      view
-    );
-    this.gl.uniformMatrix4fv(
-      this.gl.getUniformLocation(this.program, "projection"),
-      false,
-      projection
-    );
     this.gl.clearColor(0, 0, 0, 1);
     this.gl.clear(this.gl.COLOR_BUFFER_BIT);
     this.batcher.draw();

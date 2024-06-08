@@ -36,13 +36,11 @@ export default class Batcher {
           this.program,
           attrib.attributeName
         );
-        console.log(attribLocation, attrib.attributeName);
         this.gl.enableVertexAttribArray(attribLocation);
 
         const vertexBuffer = this.gl.createBuffer();
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
 
-        console.log(attrib.extractor(m));
         this.gl.bufferData(
           this.gl.ARRAY_BUFFER,
           attrib.extractor(m),
